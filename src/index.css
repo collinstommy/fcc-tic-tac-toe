@@ -7,10 +7,31 @@ ol, ul {
   padding-left: 30px;
 }
 
+.game{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board-row{
+  justify-content: center;
+  display: flex;
+}
+
 .board-row:after {
   clear: both;
   content: "";
   display: table;
+}
+
+.letter-choice{
+  border: solid 1px black;
+  padding: 4px;
 }
 
 .status {
@@ -19,21 +40,28 @@ ol, ul {
 
 .square {
   background: #fff;
-  border: 1px solid #999;
+  border: 3px solid #240339;
+  background-color: #9675AB;
   float: left;
-  font-size: 24px;
+  color: #251758;
+  font-size: 70px;
   font-weight: bold;
   line-height: 34px;
-  height: 34px;
+  height: 100px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 34px;
+  width: 100px;
 }
 
 .square:focus {
   outline: none;
+}
+
+.status{
+  padding-bottom: 10px;
+  font-size: 30px;
 }
 
 .kbd-navigation .square:focus {
@@ -45,10 +73,22 @@ ol, ul {
   flex-direction: row;
 }
 
-.game-info {
-  margin-left: 20px;
+.game-board{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .playerChoice{
   padding-bottom: 10px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.status
+.playerChoice{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

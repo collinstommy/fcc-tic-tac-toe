@@ -8,7 +8,6 @@ export default class Board extends React.Component {
     super();
     this.state = {
       squares: Array(9).fill(null),
-      xIsNext: true,
       player: "X",
       playerGo: true
     };
@@ -39,17 +38,34 @@ export default class Board extends React.Component {
     if (this.calculateWinner(squares) || squares[i]) {
       return;
     }
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
-    this.setState({
-      squares: squares,
-      xIsNext: !this.state.xIsNext,
-      player: "X",
-      playerGo: false
-    });
+    squares[i] = this.state.player
+    this.computerGo(squares);
   }
 
-  computerGo = () => {
-    
+
+  movesLeft = (squares) => {
+    return squares.filter((square) => square === null).length > 0;
+  }
+
+  computerGo = (newSquares) => {
+    let squareToMove = this.getRandomInt(0, 9);
+    let lookingForSquare = true;
+
+    while (lookingForSquare && this.movesLeft(newSquares)) {
+      if (newSquares[squareToMove] === null) {
+        newSquares[squareToMove] = this.state.player === "X" ? "0" : "X";
+        lookingForSquare = false;
+
+      }
+      squareToMove = this.getRandomInt(0, 9);
+    }
+    this.setState({
+      squares: newSquares,
+    })
+  }
+
+  getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   renderSquare(i) {
@@ -62,55 +78,60 @@ export default class Board extends React.Component {
   }
 
   ChooseX = () => {
-    this.setState({ player: "X", xIsNext: true });
+    this.setState({ player: "X" });
     console.log(this.state);
   }
 
   ChooseO = () => {
-    this.setState({ player: "O", xIsNext: false });
+    this.setState({ player: "O" });
   }
 
   reset = () => {
     this.setState({
-    squares: Array(9).fill(null),
+      squares: Array(9).fill(null),
       xIsNext: true,
-      player: "X"});
-}
-
-render() {
-  const winner = this.calculateWinner(this.state.squares);
-  let status;
-  if (winner) {
-    status = 'Winner: ' + winner;
-  } else {
-    status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      player: "X"
+    });
   }
-  return (
-    <div>
-      <div className="playerChoice">
-        Play as: <span class onClick={this.ChooseX}>"X"</span> or
-                    <span onClick={this.ChooseO}>"O"</span>
-        <br />You are playing as {this.state.player}
-        <button onClick={this.reset}>Reset</button>
+
+  render() {
+    const winner = this.calculateWinner(this.state.squares);
+    const finished = !this.movesLeft(this.state.squares);
+    let status;
+    if (winner) {
+      status = 'Winner: ' + winner;
+    }
+    else if (finished) {
+      status = "Its a stalemate, no winner this time."
+    } 
+
+    return (
+      <div>
+        <div className="playerChoice">
+          Play as: <span className="letter-choice" onClick={this.ChooseX}>"X"</span> or
+                    <span className="letter-choice" onClick={this.ChooseO}>"O"</span>
+        </div>
+        <div className="playerChoice">You are playing as {this.state.player}</div>
+         <div className="playerChoice"><button onClick={this.reset}>Reset</button></div>
+        
+        <div className="status">{status}</div>
+        <div className="board-row">
+          {this.renderSquare(0)}
+          {this.renderSquare(1)}
+          {this.renderSquare(2)}
+        </div>
+        <div className="board-row">
+          {this.renderSquare(3)}
+          {this.renderSquare(4)}
+          {this.renderSquare(5)}
+        </div>
+        <div className="board-row">
+          {this.renderSquare(6)}
+          {this.renderSquare(7)}
+          {this.renderSquare(8)}
+        </div>
       </div>
-      <div className="status">{status}</div>
-      <div className="board-row">
-        {this.renderSquare(0)}
-        {this.renderSquare(1)}
-        {this.renderSquare(2)}
-      </div>
-      <div className="board-row">
-        {this.renderSquare(3)}
-        {this.renderSquare(4)}
-        {this.renderSquare(5)}
-      </div>
-      <div className="board-row">
-        {this.renderSquare(6)}
-        {this.renderSquare(7)}
-        {this.renderSquare(8)}
-      </div>
-    </div>
-  );
-}
+    );
+  }
 }
 
